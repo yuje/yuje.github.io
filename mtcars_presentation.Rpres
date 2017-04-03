@@ -1,0 +1,33 @@
+mtcars Presentation
+========================================================
+author: Jeffrey Yu
+date: April 2, 2017
+autosize: true
+
+First Slide
+========================================================
+
+Cities in San Francisco Bay Area
+
+- Authored April 2, 2017
+
+Slide With Code
+========================================================
+
+```{r}
+summary(mtcars)
+```
+
+Slide with Plotly Data
+========================================================
+
+```{r, echo=FALSE}
+library(plotly)
+p <- plot_ly(data=mtcars, x=~wt, y=~mpg, mode="markers")
+htmlwidgets::saveWidget(as.widget(p), file = "demo.html")
+```
+<iframe src="demo.html" style="position:absolute;height:100%;width:100%"></iframe>
+
+
+End
+========================================================
