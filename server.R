@@ -1,0 +1,37 @@
+#
+# This is the server logic of a Shiny web application. You can run the 
+# application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+# 
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+library(leaflet)
+
+
+# Define server logic required to draw a histogram
+shinyServer(function(input, output) {
+  
+  ba_cities <- data.frame(
+    name=c("San Francisco", "San Jose", "Oakland", "Fremont", "Santa Rosa",
+           "Hayward", "Richmond", "Sunnyvale", "Concord", "Santa Clara",
+           "Vallejo", "Berkeley", "San Mateo", "Fairfield"),
+    lat=c(37.783333, 37.333333, 37.804444, 37.548333, 38.448611, 37.66882,
+          37.935833, 37.371111, 37.978056, 37.354444, 38.113056, 37.871667,
+          37.554167, 38.257778),
+    lng=c(-122.416667, -121.9, -122.270833, -121.988611, -122.704722,
+          -122.080796, -122.347778, -122.0375, -122.031111, -121.969167,
+          -122.235833, -122.272778, -122.313056, -122.054167),
+    pop=c(871185, 1026908, 390724, 232206, 174170, 149392, 108565, 140081,
+          125880, 126215, 118837, 120971, 103536, 109320)
+  )
+
+  output$baMap <- renderLeaflet({
+    ba_cities %>% 
+    leaflet %>% 
+    addTiles %>% 
+    addCircles(weight=1, radius=sqrt(ba_cities$pop)*30)
+    })
+})
