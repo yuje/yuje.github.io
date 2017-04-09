@@ -26,9 +26,6 @@ The analysis attempts to answer two basic questions:
  2. Across the United States, which types of events have the greatest economic
  consequences?
 
---- .class #id 
-
-## Top Fatalities By Storm Type
 ```{r, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(cache=TRUE)
 
@@ -72,6 +69,9 @@ econdmg_by_type <- econdmg_by_type[with(econdmg_by_type, order(-x)), ]
 names(econdmg_by_type) <- c('Event.Type', 'Economic.Damage')
 ```
 
+---
+
+## Top Fatalities By Storm Type
 ```{r, echo=FALSE}
 with(fatalities_by_type, barplot(
   fatalities_by_type$Fatalities[1:10], names=fatalities_by_type$Event.Type[1:10],
@@ -79,10 +79,9 @@ with(fatalities_by_type, barplot(
   main="Top Fatalities by Storm Event Type"))
 ```
 
---- .class #id 
+---
 
 ## Top Injuries By Storm Type
-
 ```{r, echo=FALSE}
 with(injuries_by_type, barplot(
   injuries_by_type$Injuries[1:10], names=injuries_by_type$Event.Type[1:10],
@@ -90,10 +89,9 @@ with(injuries_by_type, barplot(
   main="Top Injuries by Storm Event Type"))
 ```
 
---- .class #id 
+---
 
 ## Economic Damage By Storm Type
-
 ```{r, echo=FALSE}
 with(econdmg_by_type, barplot(
   econdmg_by_type$Economic.Damage[1:10], names=econdmg_by_type$Event.Type[1:10],
@@ -101,7 +99,7 @@ with(econdmg_by_type, barplot(
   main="Economic Damage by Storm Event Type ($)"))
 ```
 
---- .class #id 
+---
 
 ## Further Info:
 

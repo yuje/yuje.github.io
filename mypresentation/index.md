@@ -26,25 +26,26 @@ The analysis attempts to answer two basic questions:
  2. Across the United States, which types of events have the greatest economic
  consequences?
 
---- .class #id 
+
+
+---
 
 ## Top Fatalities By Storm Type
-
-
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
---- .class #id 
+
+---
 
 ## Top Injuries By Storm Type
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
---- .class #id 
+---
 
 ## Economic Damage By Storm Type
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
 
---- .class #id 
+---
 
 ## Further Info:
 
