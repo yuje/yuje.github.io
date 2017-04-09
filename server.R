@@ -8,30 +8,43 @@
 #
 
 library(shiny)
-library(leaflet)
-
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-  
-  ba_cities <- data.frame(
-    name=c("San Francisco", "San Jose", "Oakland", "Fremont", "Santa Rosa",
-           "Hayward", "Richmond", "Sunnyvale", "Concord", "Santa Clara",
-           "Vallejo", "Berkeley", "San Mateo", "Fairfield"),
-    lat=c(37.783333, 37.333333, 37.804444, 37.548333, 38.448611, 37.66882,
-          37.935833, 37.371111, 37.978056, 37.354444, 38.113056, 37.871667,
-          37.554167, 38.257778),
-    lng=c(-122.416667, -121.9, -122.270833, -121.988611, -122.704722,
-          -122.080796, -122.347778, -122.0375, -122.031111, -121.969167,
-          -122.235833, -122.272778, -122.313056, -122.054167),
-    pop=c(871185, 1026908, 390724, 232206, 174170, 149392, 108565, 140081,
-          125880, 126215, 118837, 120971, 103536, 109320)
-  )
-
-  output$baMap <- renderLeaflet({
-    ba_cities %>% 
-    leaflet %>% 
-    addTiles %>% 
-    addCircles(weight=1, radius=sqrt(ba_cities$pop)*30)
-    })
+  output$lotteryResults <- reactive({
+    
+    # Set random seed so it'll be different every time
+    set.seed( as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31))
+    
+    guesses <- c(input$slider1, input$slider2, input$slider3, input$slider4,
+                input$slider5, input$slider6)
+    
+    if (length(unique(guesses)) < 6) {
+      return("Please enter 6 UNIQUE numbers in order to play. Try again.")
+    }
+    winningNumbers <- sample(1:60, 6, replace=F)
+    matching <- intersect(guesses, winningNumbers)
+    
+    prize <- 0
+    if (length(matching) == 3) {
+      prize <- 50
+    } else if (length(matching) == 4) {
+      prize <- 1000
+    } else if (length(matching) == 5) {
+      prize <- 50000
+    } else if (length(matching) == 6) {
+      prize <- 6000000
+    }
+    
+    outputs <- c(
+      "The winning numbers were (",
+      paste(winningNumbers, collapse=", "),
+      "). You correctly matched (",
+      paste(matching, collapse=", "),
+      "). You've won $",
+      prize,
+      " dollars! "
+    )
+    paste(outputs, collapse="")
+  })
 })

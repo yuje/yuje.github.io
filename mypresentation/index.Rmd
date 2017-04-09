@@ -1,0 +1,111 @@
+---
+title       : The Economic and Human Costs of Storm Events
+subtitle    : 
+author      : Jeffrey Yu
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Synopsis
+This project involves an analysis of the U.S. National Oceanic and Atmospheric
+Administration's (NOAA) storm database, which tracks characteristics of major
+storms and weather events in the United States, including when and where they
+occur, as well as estimates of any fatalities, injuries, and property damage. 
+The recorded events in the storm database range from 1950 to 2011. 
+
+The analysis attempts to answer two basic questions:
+
+ 1. Across the United States, which types of events are most harmful with
+ respect to population health?
+
+ 2. Across the United States, which types of events have the greatest economic
+ consequences?
+
+--- .class #id 
+
+## Top Fatalities By Storm Type
+```{r, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+
+download.file(
+  "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2",
+  destfile="storm_data.csv.bz2")
+storm_data <- read.csv("storm_data.csv.bz2")
+fatalities_by_type <- aggregate(
+  storm_data$FATALITIES, by=list(storm_data$EVTYPE), FUN=sum)
+fatalities_by_type <- fatalities_by_type[with(fatalities_by_type, order(-x)), ]
+names(fatalities_by_type) <- c('Event.Type', 'Fatalities')
+injuries_by_type <- aggregate(
+  storm_data$INJURIES, by=list(storm_data$EVTYPE), FUN=sum)
+injuries_by_type <- injuries_by_type[with(injuries_by_type, order(-x)), ]
+names(injuries_by_type) <- c('Event.Type', 'Injuries')
+storm_data$PROPDMG <- as.numeric(storm_data$PROPDMG)
+storm_data$CROPDMG <- as.numeric(storm_data$CROPDMG)
+storm_data$PROPDMGEXP <- as.character(storm_data$PROPDMGEXP)
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'K'] <- 3
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'm'] <- 6
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'M'] <- 6
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'B'] <- 9
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'h'] <- 2
+storm_data$PROPDMGEXP[storm_data$PROPDMGEXP == 'H'] <- 2
+storm_data$PROPDMGEXP <- as.numeric(storm_data$PROPDMGEXP)
+storm_data$PROPDMGEXP[is.na(storm_data$PROPDMGEXP)] <- 1
+storm_data['PROPDMGABS'] <- storm_data$PROPDMG * 10^storm_data$PROPDMGEXP
+storm_data$CROPDMGEXP <- as.character(storm_data$CROPDMGEXP)
+storm_data$CROPDMGEXP[storm_data$CROPDMGEXP == 'k'] <- 3
+storm_data$CROPDMGEXP[storm_data$CROPDMGEXP == 'K'] <- 3
+storm_data$CROPDMGEXP[storm_data$CROPDMGEXP == 'm'] <- 6
+storm_data$CROPDMGEXP[storm_data$CROPDMGEXP == 'M'] <- 6
+storm_data$CROPDMGEXP[storm_data$CROPDMGEXP == 'B'] <- 9
+storm_data$CROPDMGEXP <- as.numeric(storm_data$CROPDMGEXP)
+storm_data$C[is.na(storm_data$CROPDMGEXP)] <- 1
+storm_data['CROPDMGABS'] <- storm_data$CROPDMG * 10^storm_data$CROPDMGEXP
+storm_data['ECONDMG'] <- storm_data$PROPDMG + storm_data$CROPDMG
+econdmg_by_type <- aggregate(
+  storm_data$ECONDMG, by=list(storm_data$EVTYPE), FUN=sum)
+econdmg_by_type <- econdmg_by_type[with(econdmg_by_type, order(-x)), ]
+names(econdmg_by_type) <- c('Event.Type', 'Economic.Damage')
+```
+
+```{r, echo=FALSE}
+with(fatalities_by_type, barplot(
+  fatalities_by_type$Fatalities[1:10], names=fatalities_by_type$Event.Type[1:10],
+  las=2, ylab="Fatalities", cex.names=0.4,
+  main="Top Fatalities by Storm Event Type"))
+```
+
+--- .class #id 
+
+## Top Injuries By Storm Type
+
+```{r, echo=FALSE}
+with(injuries_by_type, barplot(
+  injuries_by_type$Injuries[1:10], names=injuries_by_type$Event.Type[1:10],
+  las=2, ylab="Injuries", cex.names=0.4,
+  main="Top Injuries by Storm Event Type"))
+```
+
+--- .class #id 
+
+## Economic Damage By Storm Type
+
+```{r, echo=FALSE}
+with(econdmg_by_type, barplot(
+  econdmg_by_type$Economic.Damage[1:10], names=econdmg_by_type$Event.Type[1:10],
+  las=2, ylab=NA, cex.names=0.4,
+  main="Economic Damage by Storm Event Type ($)"))
+```
+
+--- .class #id 
+
+## Further Info:
+
+[Full Study](https://rstudio-pubs-static.s3.amazonaws.com/205128_326b6141ebb5475cab611f0258d97c49.html)
+
+
+
